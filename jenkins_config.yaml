@@ -2,5 +2,5 @@ jenkins_url: "http://localhost:8080"
 job_to_run: "demo-pipeline"
 params:
   BRANCH: "AI"
-  #ENV: "staging"
+  ENV: "staging"
 report_file: "report.txt"
