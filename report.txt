@@ -1,2 +1,2 @@
-demo-pipeline: build #4 = FAILURE
-demo-pipeline last log: ERROR/FAIL count = 4
+demo-pipeline: build #5 = SUCCESS
+demo-pipeline last log: ERROR/FAIL count = 0
