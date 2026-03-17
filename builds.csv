@@ -1,2 +1,3 @@
 job,number,status,duration_sec
-demo-pipeline,6,SUCCESS,3
+demo,3,SUCCESS,0
+demo-pipeline,8,SUCCESS,0
