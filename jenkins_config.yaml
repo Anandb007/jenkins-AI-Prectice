@@ -1,0 +1,6 @@
+jenkins_url: "http://localhost:8080"
+job_to_run: "demo-pipeline"
+params:
+  BRANCH: "master"
+  ENV: "staging"
+report_file: "report.txt"

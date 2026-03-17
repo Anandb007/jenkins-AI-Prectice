@@ -1,16 +1,22 @@
 import os
 import re
+import yaml
 import requests
 from dotenv import load_dotenv
 from collections import defaultdict
 
 load_dotenv()
-url = os.getenv("JENKINS_URL").rstrip("/")
-user = os.getenv("JENKINS_USER")
-token = os.getenv("JENKINS_API_TOKEN")
-auth = (user, token)
+with open("jenkins_config.yaml", "r") as f:
+    cfg = yaml.safe_load(f)
 
-job_name = "demo-pipeline"
+JENKINS_URL = cfg["jenkins_url"]
+JOB_NAME = cfg["job_to_run"]
+USER = os.getenv("JENKINS_USER")
+TOKEN = os.getenv("JENKINS_API_TOKEN")
+auth = (USER, TOKEN)
+
+url = JENKINS_URL.rstrip("/")
+job_name = JOB_NAME
 build_num = "lastBuild"  # or use a number like "1"
 
 r = requests.get(f"{url}/job/{job_name}/{build_num}/consoleText", auth=auth)

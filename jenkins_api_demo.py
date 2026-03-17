@@ -1,12 +1,20 @@
 import os
+import yaml
 import requests
 from dotenv import load_dotenv
 
 load_dotenv()
-url = os.getenv("JENKINS_URL").rstrip("/")
-user = os.getenv("JENKINS_USER")
-token = os.getenv("JENKINS_API_TOKEN")
-auth = (user, token)
+with open("jenkins_config.yaml", "r") as f:
+    cfg = yaml.safe_load(f)
+
+JENKINS_URL = cfg["jenkins_url"]
+JOB_NAME = cfg["job_to_run"]
+USER = os.getenv("JENKINS_USER")
+TOKEN = os.getenv("JENKINS_API_TOKEN")
+auth = (USER, TOKEN)
+
+url = JENKINS_URL.rstrip("/")
+job_name = JOB_NAME
 
 # Overview
 r = requests.get(f"{url}/api/json", auth=auth)
@@ -15,8 +23,7 @@ data = r.json()
 print("=== Jenkins overview ===")
 print("Jobs:", [j["name"] for j in data.get("jobs", [])])
 
-# Job details (demo-pipeline)
-job_name = "demo-pipeline"
+# Job details
 r2 = requests.get(f"{url}/job/{job_name}/api/json?depth=1", auth=auth)
 r2.raise_for_status()
 job = r2.json()

@@ -1,14 +1,23 @@
 import os
 import re
+import yaml
 import requests
 from dotenv import load_dotenv
 from collections import defaultdict
 
 load_dotenv()
-url = os.getenv("JENKINS_URL").rstrip("/")
-user = os.getenv("JENKINS_USER")
-token = os.getenv("JENKINS_API_TOKEN")
-auth = (user, token)
+with open("jenkins_config.yaml", "r") as f:
+    cfg = yaml.safe_load(f)
+
+JENKINS_URL = cfg["jenkins_url"]
+JOB_NAME = cfg["job_to_run"]
+REPORT_FILE = cfg["report_file"]
+USER = os.getenv("JENKINS_USER")
+TOKEN = os.getenv("JENKINS_API_TOKEN")
+auth = (USER, TOKEN)
+
+url = JENKINS_URL.rstrip("/")
+job_name = JOB_NAME
 
 # Get jobs
 r = requests.get(f"{url}/api/json", auth=auth)
@@ -25,16 +34,16 @@ for j in jobs:
     build = r2.json()
     report.append(f"{name}: build #{build['number']} = {build.get('result', '?')}")
 
-# Get console for demo-pipeline and count errors
-if any(j["name"] == "demo-pipeline" for j in jobs):
-    r3 = requests.get(f"{url}/job/demo-pipeline/lastBuild/consoleText", auth=auth)
+# Get console for configured job and count errors
+if any(j["name"] == job_name for j in jobs):
+    r3 = requests.get(f"{url}/job/{job_name}/lastBuild/consoleText", auth=auth)
     if r3.status_code == 200:
         text = r3.text
         err_count = len(re.findall(r"ERROR|FAIL", text, re.I))
-        report.append(f"demo-pipeline last log: ERROR/FAIL count = {err_count}")
+        report.append(f"{job_name} last log: ERROR/FAIL count = {err_count}")
 
-# Write report
-with open("report.txt", "w") as f:
+# Write report to path from config
+with open(REPORT_FILE, "w") as f:
     f.write("\n".join(report))
-print("Report written to report.txt")
+print(f"Report written to {REPORT_FILE}")
 print("\n".join(report))
