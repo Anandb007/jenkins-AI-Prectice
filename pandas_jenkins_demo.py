@@ -11,17 +11,17 @@ with open("jenkins_config.yaml", "r") as f:
 url = cfg["jenkins_url"].rstrip("/")
 auth = (os.getenv("JENKINS_USER"), os.getenv("JENKINS_API_TOKEN"))
 
-jobs_resp = requests.get(f"{url}/api/json", auth=auth)
+jobs_resp = requests.get(f"{url}/api/json", auth=auth, timeout=10)
 jobs_resp.raise_for_status()
 jobs_data = jobs_resp.json().get("jobs", [])
 
 builds = []
 for job_info in jobs_data:
     name = job_info.get("name")
-    job_url = job_info.get("url")
-    if not name or not job_url:
+    if not name:
         continue
-    build_resp = requests.get(f"{job_url}lastBuild/api/json", auth=auth)
+    # Use configured base URL (localhost), not job_info["url"] (public IP)
+    build_resp = requests.get(f"{url}/job/{name}/lastBuild/api/json", auth=auth, timeout=10)
     if build_resp.status_code != 200:
         continue
     b = build_resp.json()
