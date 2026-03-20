@@ -1,6 +1,0 @@
-jenkins_url: "http://localhost:8080"
-job_to_run: "demo-pipeline"
-params:
-  BRANCH: ""
-  ENV: ""
-report_file: "report.txt"
