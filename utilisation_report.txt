@@ -1,0 +1,8 @@
+=== Utilisation: last 10 minutes (from file) ===
+  2026-03-18T13:21:45.047234  cpu=0.0%  memory=26.51%
+  2026-03-18T13:24:34.804552  cpu=0.0%  memory=26.49%
+  2026-03-18T13:25:47.876044  cpu=0.0%  memory=26.52%
+  Total samples: 3
+
+=== Live usage now ===
+  cpu=0.0%  memory=26.52%
