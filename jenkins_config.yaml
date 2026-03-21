@@ -1,0 +1,5 @@
+jenkins_url: "http://localhost:8080"
+report_dir: "reports"
+metrics_file: "live_metrics.csv"
+anomaly_output: "live_metrics_with_anomalies.csv"
+builds_data_file: "builds_data.csv"
